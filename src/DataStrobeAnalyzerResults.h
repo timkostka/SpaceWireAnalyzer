@@ -1,16 +1,15 @@
-#ifndef SIMPLESERIAL_ANALYZER_RESULTS
-#define SIMPLESERIAL_ANALYZER_RESULTS
+#pragma once
 
 #include <AnalyzerResults.h>
 
-class SimpleSerialAnalyzer;
-class SimpleSerialAnalyzerSettings;
+class DataStrobeAnalyzer;
+class DataStrobeAnalyzerSettings;
 
-class SimpleSerialAnalyzerResults : public AnalyzerResults
+class DataStrobeAnalyzerResults : public AnalyzerResults
 {
 public:
-	SimpleSerialAnalyzerResults( SimpleSerialAnalyzer* analyzer, SimpleSerialAnalyzerSettings* settings );
-	virtual ~SimpleSerialAnalyzerResults();
+	DataStrobeAnalyzerResults( DataStrobeAnalyzer* analyzer, DataStrobeAnalyzerSettings* settings );
+	virtual ~DataStrobeAnalyzerResults();
 
 	virtual void GenerateBubbleText( U64 frame_index, Channel& channel, DisplayBase display_base );
 	virtual void GenerateExportFile( const char* file, DisplayBase display_base, U32 export_type_user_id );
@@ -22,8 +21,6 @@ public:
 protected: //functions
 
 protected:  //vars
-	SimpleSerialAnalyzerSettings* mSettings;
-	SimpleSerialAnalyzer* mAnalyzer;
+	DataStrobeAnalyzerSettings* mSettings;
+	DataStrobeAnalyzer* mAnalyzer;
 };
-
-#endif //SIMPLESERIAL_ANALYZER_RESULTS
