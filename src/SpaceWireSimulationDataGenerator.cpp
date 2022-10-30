@@ -1,29 +1,29 @@
-#include "DataStrobeSimulationDataGenerator.h"
-#include "DataStrobeAnalyzerSettings.h"
+#include "SpaceWireSimulationDataGenerator.h"
+#include "SpaceWireAnalyzerSettings.h"
 
 #include <AnalyzerHelpers.h>
 
-DataStrobeSimulationDataGenerator::DataStrobeSimulationDataGenerator() : mNextData( 0 )
+SpaceWireSimulationDataGenerator::SpaceWireSimulationDataGenerator() : mNextData( 0 )
 {
 }
 
-DataStrobeSimulationDataGenerator::~DataStrobeSimulationDataGenerator()
+SpaceWireSimulationDataGenerator::~SpaceWireSimulationDataGenerator()
 {
 }
 
-void DataStrobeSimulationDataGenerator::Initialize( U32 simulation_sample_rate, DataStrobeAnalyzerSettings* settings )
+void SpaceWireSimulationDataGenerator::Initialize( U32 simulation_sample_rate, SpaceWireAnalyzerSettings* settings )
 {
 	mSimulationSampleRateHz = simulation_sample_rate;
 	mSettings = settings;
 
-	mData = mDataStrobeSimulationChannels.Add( settings->mDataChannel, mSimulationSampleRateHz, BIT_LOW );
-    mStrobe = mDataStrobeSimulationChannels.Add( settings->mDataChannel, mSimulationSampleRateHz, BIT_LOW );
+	mData = mSpaceWireSimulationChannels.Add( settings->mDataChannel, mSimulationSampleRateHz, BIT_LOW );
+    mStrobe = mSpaceWireSimulationChannels.Add( settings->mDataChannel, mSimulationSampleRateHz, BIT_LOW );
 
-    mDataStrobeSimulationChannels.AdvanceAll( mSimulationSampleRateHz / 10000000 );
+    mSpaceWireSimulationChannels.AdvanceAll( mSimulationSampleRateHz / 10000000 );
 
 }
 
-U32 DataStrobeSimulationDataGenerator::GenerateSimulationData( U64 largest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels )
+U32 SpaceWireSimulationDataGenerator::GenerateSimulationData( U64 largest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels )
 {
 	U64 adjusted_largest_sample_requested = AnalyzerHelpers::AdjustSimulationTargetSample( largest_sample_requested, sample_rate, mSimulationSampleRateHz );
 
@@ -47,15 +47,15 @@ U32 DataStrobeSimulationDataGenerator::GenerateSimulationData( U64 largest_sampl
             {
                 mStrobe->Transition();
             }
-            mDataStrobeSimulationChannels.AdvanceAll( samples_per_bit );
+            mSpaceWireSimulationChannels.AdvanceAll( samples_per_bit );
         }
 	}
 
-	*simulation_channels = mDataStrobeSimulationChannels.GetArray();
-    return mDataStrobeSimulationChannels.GetCount();
+	*simulation_channels = mSpaceWireSimulationChannels.GetArray();
+    return mSpaceWireSimulationChannels.GetCount();
 }
 
-//void DataStrobeSimulationDataGenerator::CreateSerialByte()
+//void SpaceWireSimulationDataGenerator::CreateSerialByte()
 //{
 //	U32 samples_per_bit = mSimulationSampleRateHz / mSettings->mBitRate;
 //

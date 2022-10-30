@@ -2,14 +2,14 @@
 
 #include <AnalyzerResults.h>
 
-class DataStrobeAnalyzer;
-class DataStrobeAnalyzerSettings;
+class SpaceWireAnalyzer;
+class SpaceWireAnalyzerSettings;
 
-class DataStrobeAnalyzerResults : public AnalyzerResults
+class SpaceWireAnalyzerResults : public AnalyzerResults
 {
 public:
-	DataStrobeAnalyzerResults( DataStrobeAnalyzer* analyzer, DataStrobeAnalyzerSettings* settings );
-	virtual ~DataStrobeAnalyzerResults();
+	SpaceWireAnalyzerResults( SpaceWireAnalyzer* analyzer, SpaceWireAnalyzerSettings* settings );
+	virtual ~SpaceWireAnalyzerResults();
 
 	virtual void GenerateBubbleText( U64 frame_index, Channel& channel, DisplayBase display_base );
 	virtual void GenerateExportFile( const char* file, DisplayBase display_base, U32 export_type_user_id );
@@ -21,6 +21,6 @@ public:
 protected: //functions
 
 protected:  //vars
-	DataStrobeAnalyzerSettings* mSettings;
-	DataStrobeAnalyzer* mAnalyzer;
+	SpaceWireAnalyzerSettings* mSettings;
+	SpaceWireAnalyzer* mAnalyzer;
 };

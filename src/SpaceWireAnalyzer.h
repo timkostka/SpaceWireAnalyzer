@@ -2,15 +2,18 @@
 
 #include <Analyzer.h>
 
-#include "DataStrobeAnalyzerResults.h"
-#include "DataStrobeSimulationDataGenerator.h"
+#include "SpaceWireAnalyzerResults.h"
+#include "SpaceWireSimulationDataGenerator.h"
 
-class DataStrobeAnalyzerSettings;
-class ANALYZER_EXPORT DataStrobeAnalyzer : public Analyzer2
+#define CONTROL_FLAG ( 1 << 0 )
+#define DATA_FLAG ( 1 << 1 )
+
+class SpaceWireAnalyzerSettings;
+class ANALYZER_EXPORT SpaceWireAnalyzer : public Analyzer2
 {
 public:
-	DataStrobeAnalyzer();
-	virtual ~DataStrobeAnalyzer();
+	SpaceWireAnalyzer();
+	virtual ~SpaceWireAnalyzer();
 
 	virtual void SetupResults();
 	virtual void WorkerThread();
@@ -22,12 +25,12 @@ public:
 	virtual bool NeedsRerun();
 
 protected: //vars
-	std::auto_ptr< DataStrobeAnalyzerSettings > mSettings;
-	std::auto_ptr< DataStrobeAnalyzerResults > mResults;
+	std::auto_ptr< SpaceWireAnalyzerSettings > mSettings;
+	std::auto_ptr< SpaceWireAnalyzerResults > mResults;
 	AnalyzerChannelData* mData;
     AnalyzerChannelData* mStrobe;
 
-	DataStrobeSimulationDataGenerator mSimulationDataGenerator;
+	SpaceWireSimulationDataGenerator mSimulationDataGenerator;
 	bool mSimulationInitialized;
     U32 mSampleRateHz;
 

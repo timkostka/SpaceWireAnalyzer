@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.13)
 
-project(DataStrobeAnalyzer)
+project(SpaceWireAnalyzer)
 
 add_definitions( -DLOGIC2 )
 
@@ -13,14 +13,14 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(ExternalAnalyzerSDK)
 
 set(SOURCES 
-src/DataStrobeAnalyzer.cpp
-src/DataStrobeAnalyzer.h
-src/DataStrobeAnalyzerResults.cpp
-src/DataStrobeAnalyzerResults.h
-src/DataStrobeAnalyzerSettings.cpp
-src/DataStrobeAnalyzerSettings.h
-src/DataStrobeSimulationDataGenerator.cpp
-src/DataStrobeSimulationDataGenerator.h
+src/SpaceWireAnalyzer.cpp
+src/SpaceWireAnalyzer.h
+src/SpaceWireAnalyzerResults.cpp
+src/SpaceWireAnalyzerResults.h
+src/SpaceWireAnalyzerSettings.cpp
+src/SpaceWireAnalyzerSettings.h
+src/SpaceWireSimulationDataGenerator.cpp
+src/SpaceWireSimulationDataGenerator.h
 )
 
 add_analyzer_plugin(${PROJECT_NAME} SOURCES ${SOURCES})

@@ -4,19 +4,19 @@
 
 #include <SimulationChannelDescriptor.h>
 
-class DataStrobeAnalyzerSettings;
+class SpaceWireAnalyzerSettings;
 
-class DataStrobeSimulationDataGenerator
+class SpaceWireSimulationDataGenerator
 {
 public:
-	DataStrobeSimulationDataGenerator();
-	~DataStrobeSimulationDataGenerator();
+	SpaceWireSimulationDataGenerator();
+	~SpaceWireSimulationDataGenerator();
 
-	void Initialize( U32 simulation_sample_rate, DataStrobeAnalyzerSettings* settings );
+	void Initialize( U32 simulation_sample_rate, SpaceWireAnalyzerSettings* settings );
 	U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels );
 
 protected:
-	DataStrobeAnalyzerSettings* mSettings;
+	SpaceWireAnalyzerSettings* mSettings;
 	U32 mSimulationSampleRateHz;
 
 protected:
@@ -25,7 +25,7 @@ protected:
 	//std::string mSerialText;
 	//U32 mStringIndex;
 
-	SimulationChannelDescriptorGroup mDataStrobeSimulationChannels; 
+	SimulationChannelDescriptorGroup mSpaceWireSimulationChannels; 
 	SimulationChannelDescriptor * mData;
     SimulationChannelDescriptor * mStrobe;
 
