@@ -41,8 +41,18 @@ void SpaceWireAnalyzerResults::GenerateBubbleText( U64 frame_index, Channel& cha
     }
     else if( frame.mType == SpaceWireAnalyzer::kTypeTimecode )
     {
-        char buffer[ 64 ];
-        sprintf( buffer, "timecode %u", ( unsigned int )frame.mData1 );
+        // calculate time since last timecode in us
+        char buffer[ 64 ] = { 0 };
+        if( frame.mFlags & SpaceWireAnalyzer ::kFlagWarning )
+        {
+            strcpy( &buffer[ strlen( buffer ) ], "unexpected " );
+        }
+        sprintf( &buffer[strlen(buffer)], "timecode %u", ( unsigned int )frame.mData1 );
+        if( frame.mData2 )
+        {
+            double delta = frame.mData2 / ( mAnalyzer->mSampleRateHz / 1e6 );
+            sprintf( &buffer[ strlen( buffer ) ], " (delta=%g us)", delta );
+        }
         AddResultString( buffer );
     }
     else if( frame.mType == SpaceWireAnalyzer::kTypePacket )

@@ -77,6 +77,8 @@ public:
         kFlagError = 1 << 7,
     };
 
+    U32 mSampleRateHz;
+
   protected: // vars
 	std::auto_ptr< SpaceWireAnalyzerSettings > mSettings;
 	std::auto_ptr< SpaceWireAnalyzerResults > mResults;
@@ -85,7 +87,6 @@ public:
 
 	SpaceWireSimulationDataGenerator mSimulationDataGenerator;
 	bool mSimulationInitialized;
-    U32 mSampleRateHz;
 
 	// desync the stream
     void Desync();

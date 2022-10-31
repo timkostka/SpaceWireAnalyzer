@@ -255,15 +255,26 @@ void SpaceWireAnalyzer::WorkerThread()
                     else if( !controlChar )
                     {
                         // ESC + DATA = TIMECODE
-                        U8 expectedTimecode = ( mLastTimecode + 1 ) % 64;
-
-                        if( mLastTimecode != 255 && mLastTimecode != expectedTimecode )
-
+                        // see if this matches the expected value
+                        U8 expectedValue = ( mLastTimecode + 1 ) % 64;
+                        bool matchesExpected = (mLastTimecode == 255 || value == expectedValue);
+                        // save results
+                        if( mSettings->mShowTimecodes || !matchesExpected && mSettings->mShowErrors )
+                        {
                             // TIMECODE
                             if( mSettings->mShowTimecodes )
                             {
-                                AddFrame( value, 0, kTypeTimecode, 0, mEscPrefixStartingSample, endingSample );
+                                U64 delta = 0;
+                                if( mLastTimecode != 255 )
+                                {
+                                    delta = mEscPrefixStartingSample - mLastTimecodeStartingSample;
+                                }
+                                AddFrame( value, delta, kTypeTimecode, (matchesExpected) ? 0 : kFlagWarning, mEscPrefixStartingSample, endingSample );
                             }
+                        }
+                        // save timecode for later comparison
+                        mLastTimecode = value;
+                        mLastTimecodeStartingSample = mEscPrefixStartingSample;
                     }
                     else
                     {
