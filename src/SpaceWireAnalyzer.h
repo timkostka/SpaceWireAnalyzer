@@ -5,10 +5,31 @@
 #include "SpaceWireAnalyzerResults.h"
 #include "SpaceWireSimulationDataGenerator.h"
 
-#define CONTROL_FLAG ( 1 << 0 )
-#define DATA_FLAG ( 1 << 1 )
+// holds up to 12 buffered bits
+struct BufferedBitsStruct
+{
+    // number of bits buffered
+    U16 count;
+    // value of those bits (LSB first)
+    U16 value;
+    // first sample of the given bit
+    U64 firstSample[ 6 ];
+    // constructor
+    BufferedBitsStruct();
+    // push a new bit into the buffer
+    // (can only be called when count < 12)
+    void Push( BitState state, U64 firstSampleOfBit );
+    // return the Xth bit in the buffer
+    U8 Get( U8 index ) const;
+    // return true if second parity bit matches
+    bool ParityMatch( unsigned int charLength ) const;
+    // pop an even number of characters
+    // (can only be called when count == 6 or count == 12)
+    void Pop( U8 skip );
+};
 
 class SpaceWireAnalyzerSettings;
+
 class ANALYZER_EXPORT SpaceWireAnalyzer : public Analyzer2
 {
 public:
@@ -24,7 +45,39 @@ public:
 	virtual const char* GetAnalyzerName() const;
 	virtual bool NeedsRerun();
 
-protected: //vars
+	// control character enums
+    enum ControlCharacterEnum : uint8_t
+    {
+        kControlFct = 0b00,
+        kControlEop = 0b01,
+        kControlEep = 0b10,
+        kControlEsc = 0b11,
+    };
+
+    // frame types (in mType parameter)
+    enum FrameTypeEnum : uint8_t
+    {
+        kTypeControlCharacter,
+        kTypeDataCharacter,
+        kTypeNull,
+        kTypeTimecode,
+        kTypePacket,
+        kTypeEmptyPacket,
+        kTypeErrorPacket,
+        kTypeEscapeError,
+        kTypeParityError,
+        kTypeLinkSpeedChange,
+    };
+
+    // frame flags
+    enum FrameFlagEnum : uint8_t
+    {
+        kFlagNone = 0,
+        kFlagWarning = 1 << 6,
+        kFlagError = 1 << 7,
+    };
+
+  protected: // vars
 	std::auto_ptr< SpaceWireAnalyzerSettings > mSettings;
 	std::auto_ptr< SpaceWireAnalyzerResults > mResults;
 	AnalyzerChannelData* mData;
@@ -34,6 +87,34 @@ protected: //vars
 	bool mSimulationInitialized;
     U32 mSampleRateHz;
 
+	// desync the stream
+    void Desync();
+
+	// add a new frame
+    void AddFrame( U64 mData1, U64 mData2, U8 mType, U8 mFlags, U64 mStartingSampleInclusive, U64 mEndingSampleInclusive );
+
+	// true if stream is synchronized
+    bool mSynchronized;
+	// average bitrate (mbps) of last character
+    double mLastCharacterBitrateMbps;
+
+    // saved bits
+    BufferedBitsStruct mBits;
+
+	// current packet data buffer
+    std::vector<uint8_t> mPacketData;
+	// first sample of first bit of data buffer
+    U64 mPacketDataStartingSample;
+
+	// true if ESC code was immediately previous
+    bool mEscPrefix;
+	// first sample of previous ESC code
+    U64 mEscPrefixStartingSample;
+
+	// last timecode received, or 255 if none
+    U8 mLastTimecode;
+	// first bit of last timecode received
+    U64 mLastTimecodeStartingSample;
 };
 
 extern "C" ANALYZER_EXPORT const char* __cdecl GetAnalyzerName();
